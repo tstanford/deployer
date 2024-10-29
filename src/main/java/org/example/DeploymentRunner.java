@@ -1,15 +1,17 @@
 package org.example;
 
 import org.example.DeploymentSteps.IOProcessor;
-import org.example.DeploymentSteps.IOProcessorImpl;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 public class DeploymentRunner {
+
     private IOProcessor ioProcessor;
 
-    public DeploymentRunner() {
-        ioProcessor = new IOProcessorImpl();
+    public DeploymentRunner(IOProcessor ioProcessor) {
+        this.ioProcessor = ioProcessor;
     }
 
     public void Execute(DeploymentRequest request){
