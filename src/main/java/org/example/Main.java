@@ -1,21 +1,21 @@
 package org.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 @SpringBootApplication
 public class Main implements CommandLineRunner {
 
-    private DeploymentRunner deploymentRunner;
+    private final DeploymentRunner deploymentRunner;
+    private final DeploymentFileReader deploymentFileReader;
+    private final ObjectMapper objectMapper;
 
-    public Main(DeploymentRunner deploymentRunner) {
+    public Main(DeploymentRunner deploymentRunner, DeploymentFileReader deploymentFileReader, ObjectMapper objectMapper) {
         this.deploymentRunner = deploymentRunner;
+        this.deploymentFileReader = deploymentFileReader;
+        this.objectMapper = objectMapper;
     }
 
     public static void main(String[] args) {
@@ -29,9 +29,8 @@ public class Main implements CommandLineRunner {
             System.exit(1);
         }
 
-        String data = Files.readString(Path.of(args[0]));
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        DeploymentRequest deployment = mapper.readValue(data, DeploymentRequest.class);
-        deploymentRunner.Execute(deployment);
+        String data = deploymentFileReader.getDeploymentFile(args[0]);
+        DeploymentRequest deployment = objectMapper.readValue(data, DeploymentRequest.class);
+        deploymentRunner.execute(deployment);
     }
 }
