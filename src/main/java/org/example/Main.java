@@ -29,7 +29,7 @@ public class Main implements CommandLineRunner {
             System.exit(1);
         }
 
-        String data = deploymentFileReader.getDeploymentFile(args[1]);
+        String data = deploymentFileReader.getDeploymentFile(args[0]);
         DeploymentRequest deployment = objectMapper.readValue(data, DeploymentRequest.class);
         deploymentRunner.execute(deployment);
     }
